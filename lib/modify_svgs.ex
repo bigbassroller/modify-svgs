@@ -25,7 +25,7 @@ defmodule ModifySvgs do
       "<svg ...some long svg stuff</svg>", "<svg ...some long svg stuff</svg>"
 
   """
-  def get_svg(path) do
+  def add_assigns_to_svgs(path) do
     list_files(path)
     |> Enum.each(fn(svg) ->
       {:ok, contents} = File.read!("#{path}/#{svg}")
@@ -39,9 +39,10 @@ defmodule ModifySvgs do
 
       # IO.inspect("🍒 updates")
       # updates = Floki.attr(contents, "svg", "class", fn _ -> "#{added_attribute} #{attributes}" end)
-      updates = Floki.attr(contents, "svg", "class", fn _ -> ~S("<%= assigns[:svg_class] %>") end)
+      updates = Floki.attr(contents, "svg", "class", fn _ -> "assigns #{attributes}" end)
       |> IO.inspect
       |> Floki.raw_html(encode: false)
+      |> String.replace("assigns", ~S(<%= assigns[:svg_class] %>))
      
       IO.inspect("🍒 updates")
       IO.inspect(updates)
