@@ -31,22 +31,30 @@ defmodule ModifySvgs do
       {:ok, contents} = File.read!("#{path}/#{svg}")
       |> Floki.parse_document
       
-      IO.inspect("🍒 contents")
-      IO.inspect(contents)
+      attributes = Floki.attribute(contents, "class")
+      added_attribute = ~S("<%= assigns[:svg_class] %>")
 
+      IO.inspect("🍒 added_attribute")
+      IO.inspect(added_attribute)
 
-      # This works
-      # updates = Floki.attr(contents, "div", "class", fn _ -> "🍬" end)
-
-      # 
-      updates = Floki.attr(contents, "svg", "class", fn _ -> "🍬" end)
+      # IO.inspect("🍒 updates")
+      # updates = Floki.attr(contents, "svg", "class", fn _ -> "#{added_attribute} #{attributes}" end)
+      updates = Floki.attr(contents, "svg", "class", fn _ -> ~S("<%= assigns[:svg_class] %>") end)
+      |> IO.inspect
+      |> Floki.raw_html(encode: false)
      
       IO.inspect("🍒 updates")
       IO.inspect(updates)
-      # {:ok, update_contents} = Floki.attr(contents, "id", "a", fn(id) -> String.replace(id, "a", "b") end)
-      # |> IO.inspect
-      # IO.inspect("🍒 contents")
-      # IO.inspect(contents)
+
+      new_name = String.replace(svg, "svg", "html.eex")
+   
+      IO.inspect("🍒 new_name")
+      IO.inspect(new_name)
+
+
+      new_file = File.write("icon-templates/#{new_name}", updates)
+      
+      # File.rename!("#{path}/#{svg}", "#{path}/#{new_name}")
     end)
   end
 
@@ -55,24 +63,8 @@ defmodule ModifySvgs do
     # {:ok, svg} = get_svg(path)
     data = get_svg(path)
     |> IO.inspect()
-    # Floki.attr([{"div", [{"id", "a"}], []}], "#a", "id", fn(id) -> String.replace(id, "a", "b") end)
-    # |> IO.inspect
+
   end
-
-# attr(html_elem_tuple, selector, attribute_name, mutation)
-# Specs
-
-# attr(binary() | html_tree(), binary(), binary(), (binary() -> binary())) ::
-#   html_tree()
-
-# Changes the attribute values of the elements matched by selector with the function mutation and returns the whole element tree
-# Examples
-
-# Floki.attr([{"div", [{"id", "a"}], []}], "#a", "id", fn(id) -> String.replace(id, "a", "b") end)
-# [{"div", [{"id", "b"}], []}]
-
-# Floki.attr([{"div", [{"class", "name"}], []}], "div", "id", fn _ -> "b" end)
-# [{"div", [{"id", "b"}, {"class", "name"}], []}]
 
 
   # def add_assigns_to_svg(path) do
