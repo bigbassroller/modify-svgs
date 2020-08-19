@@ -8,7 +8,7 @@ defmodule ModifySvgs do
 
   ## Examples
 
-      iex> ModifySvgs.convert_svg_to_eex("icons", "../my_app/lib/my_app_web/templates/icons", "<%= assigns[:svg_class] %>")
+      iex> ModifySvgs.convert_svg_to_eex("bootstrap-icons", "../my_app/lib/my_app_web/templates/icons", "<%= assigns[:svg_class] %>")
       "<svg class="<%= assigns[:svg_class] %>..." ...some long svg stuff</svg>", "<svg class="<%= assigns[:svg_class] %>..." ...some long svg stuff</svg>"
 
   """
